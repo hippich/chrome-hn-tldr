@@ -1,0 +1,24 @@
+{
+  "name": "HN tl;dr",
+  "version": "1",
+  "description": "Mark comments as having story tl;dr",
+  "background_page": "background.html",
+  "browser_action": {
+    "name": "HN tl;dr",
+    "icons": ["icon.png"],
+    "default_icon": "icon.png"
+  },
+  "content_scripts": [ {
+    "js": [ 
+      "jquery.min.js", 
+      "underscore-min.js", 
+      "backbone-min.js", 
+      "backbone-relational.js",
+      "json2.js", 
+      "models.js", 
+      "views.js", 
+      "tldr.js" 
+    ],
+    "matches": [ "http://news.ycombinator.com/*", "https://news.ycombinator.com/*"]
+  }]
+}
