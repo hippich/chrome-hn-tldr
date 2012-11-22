@@ -1,14 +1,14 @@
 {
+  "manifest_version": 2,
   "name": "HN tl;dr",
-  "version": "1",
+  "version": "0.0.1",
   "description": "Mark comments as having story tl;dr",
-  "background_page": "background.html",
   "browser_action": {
     "name": "HN tl;dr",
-    "icons": ["icon.png"],
     "default_icon": "icon.png"
   },
-  "content_scripts": [ {
+  "content_scripts": [{
+    "matches": [ "http://news.ycombinator.com/*", "https://news.ycombinator.com/*"],
     "js": [ 
       "jquery.min.js", 
       "underscore-min.js", 
@@ -18,7 +18,11 @@
       "models.js", 
       "views.js", 
       "tldr.js" 
-    ],
-    "matches": [ "http://news.ycombinator.com/*", "https://news.ycombinator.com/*"]
-  }]
+    ]
+  }],
+  "icons": {
+    "16": "icon.png",
+    "48": "icon.png",
+    "128": "icon.png"
+  }
 }
