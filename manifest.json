@@ -15,14 +15,25 @@
       "backbone-min.js", 
       "backbone-relational.js",
       "json2.js", 
+      "markdown.js",
       "models.js", 
       "views.js", 
       "tldr.js" 
+    ],
+    "css": [
+      "tldr.css"
     ]
   }],
   "icons": {
     "16": "icon.png",
     "48": "icon.png",
     "128": "icon.png"
-  }
+  },
+  "permissions": [
+    "http://hntldr:3000/*",
+    "http://hntldr.com/*",
+    "https://hntldr.com/*",
+    "http://api.hntldr.com/*",
+    "https://api.hntldr.com/*"
+  ]
 }
