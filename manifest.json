@@ -1,14 +1,14 @@
 {
   "manifest_version": 2,
-  "name": "HN tl;dr",
+  "name": "Reddit tl;dr",
   "version": "0.0.1",
   "description": "Mark comments as having story tl;dr",
   "browser_action": {
-    "name": "HN tl;dr",
+    "name": "Reddit tl;dr",
     "default_icon": "icon.png"
   },
   "content_scripts": [{
-    "matches": [ "http://news.ycombinator.com/*", "https://news.ycombinator.com/*"],
+    "matches": [ "http://www.reddit.com/*", "https://www.reddit.com/*"],
     "js": [ 
       "jquery.min.js", 
       "underscore-min.js", 

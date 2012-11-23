@@ -1,10 +1,11 @@
 (function() {
 
-  // Do some class assignments for easier page styling
-  $("a[href^='vote?for']").parent('center').parent('td').addClass('voting-controls'); 
+  if (! $("body").hasClass("loggedin")) {
+    return;
+  }
 
   // Get current user username
-  var username = $(".pagetop a[href^='user?id=']").text();
+  var username = $("#header-bottom-right .user a").text();
 
   // Check to see if current user logged in
   if (! username) {
@@ -12,16 +13,16 @@
   }
 
   // We are on individual post comments page
-  if ($(".title a").length == 1) {
+  if ($("body").hasClass('comments-page')) {
 
     // We are interested only in http(s):// links for now
-    if (! $(".title a").attr('href').match(/^http/)) {
+    if (! $(".entry a.title").attr('href').match(/^http/)) {
       return;
     }
 
-    var el = $(".title a").parent();
+    var el = $(".content .linklisting .thing");
     var post = new PostView({ 
-      comments_el: el.parents('td').eq(0).find('table:eq(1) > tbody').eq(0),
+      comments_el: $(".content .commentarea .sitetable"),
       vote_user:   username,
       el:          el 
     });
@@ -29,18 +30,17 @@
   }
 
   // We are on page listing many posts without comments (top, new, etc)
-  if ($(".title a").length > 1) {
+  if ($("body").hasClass('listing-page')) {
 
-    $(".title a").each(function() {
+    $(".linklisting > .thing").each(function() {
       // We are interested only in http(s):// links for now
-      if (! $(this).attr('href').match(/^http/)) {
+      if (! $("a.title", this).attr('href').match(/^http/)) {
         return;
       }
 
-      var el = $(this).parent();
       var post = new PostView({ 
         vote_user:   username,
-        el:          el 
+        el:          this 
       });
     });
   }

@@ -1,19 +1,11 @@
 CommentView = Backbone.View.extend({
   initialize: function() {
     var comment_el   = this.$el;
-    var comment_id;
-    var comment_link = comment_el.find("a:contains('link')").eq(0);
-
-    if (comment_link.length > 0) {
-      comment_id = comment_link.attr('href').replace(/.+id=(\d+)/, "$1");
-    }
-
-    var comment_user = comment_el.find("a[href^='user?id=']").text();
+    var comment_id = comment_el.attr("data-fullname");
+    var comment_user = comment_el.find(".tagline .author").eq(0).text();
 
     // Get and clean comment html
-    var comment_html = comment_el.find(".comment").clone();
-    comment_html.find("p:last").remove();
-    comment_html = comment_html.html();
+    var comment_html = comment_el.find(".usertext-body").eq(0).html();
 
     // RelationModel will throw a error if model with duplicate id is added.
     // Just skip it in this case.
@@ -32,7 +24,7 @@ CommentView = Backbone.View.extend({
     }
 
     // Add 'tl;dr' button
-    $("p:last font", comment_el).append(" | <a href='#' class='it-is-tldr' alt='It is tl;dr'><span class='tldr-count'></span><span class='tldr-title'>tl;dr</span></a> ");
+    $(".buttons", comment_el).eq(0).append("<li><a href='#' class='it-is-tldr' alt='It is tl;dr'><span class='tldr-count'></span><span class='tldr-title'>tl;dr</span></a></li>");
 
     // Render it!
     this.render();
@@ -46,15 +38,15 @@ CommentView = Backbone.View.extend({
 
   render: function() {
     if (this.model.get('tldrs') > 0) {
-      this.$el.find('.tldr-count').text( this.model.get('tldrs') + ' ' );
+      this.$el.find('.tldr-count').eq(0).text( this.model.get('tldrs') + ' ' );
     }
     else {
-      this.$el.find('.tldr-count').text('');
+      this.$el.find('.tldr-count').eq(0).text('');
     }
   },
 
   events: {
-    'click .it-is-tldr': 'do_tldr'
+    'click .it-is-tldr:first': 'do_tldr'
   },
 
   do_tldr: function(e) {
@@ -69,18 +61,11 @@ PostView = Backbone.View.extend({
   initialize: function() {
     var el = this.$el;
 
-    el.append("<div class='top-tldr' />");
-    var url_title = $("a", el).text();
-    var url_href = $("a", el).attr('href');
-    var url_id;
+    el.find("p.tagline").after("<div class='usertext-body'><div class='md top-tldr' /></div>");
+    var url_title = $("a.title", el).text();
+    var url_href = $("a.title", el).attr('href');
+    var url_id = el.attr("data-fullname");
    
-    if (this.options.comments_el) {
-      url_id = el.parents('tbody').eq(0).find('tr:eq(1) a[href^="item?id="]').attr('href').replace(/.+id=(\d+)/, "$1");
-    }
-    else {
-      url_id = el.parents('tr').eq(0).next().find('a[href^="item?id="]').attr('href').replace(/.+id=(\d+)/, "$1");
-    }
-
     var m = new Post({ 
       id: url_id,
       url: url_href,
@@ -92,7 +77,7 @@ PostView = Backbone.View.extend({
     if (this.options.comments_el) {
       var post = this;
 
-      $("tr td.default", this.options.comments_el).each(function() {
+      $(".thing", this.options.comments_el).each(function() {
         var comment = new CommentView({ 
           el: $(this),
           vote_user: post.options.vote_user 
@@ -105,9 +90,6 @@ PostView = Backbone.View.extend({
     }
 
     this.model = m;
-
-    // Render it!
-    //this.render();
 
     // Hook model change events
     _.bindAll(this, 'render');
