@@ -1,3 +1,14 @@
+// This is hack to get whole localStorage from extension scope
+var storage = {};
+var ext_options = {};
+
+chrome.extension.sendRequest({method: "getLocalStorage"}, function(response) {
+  storage = response.data;
+  ext_options = {
+    autoexpand: storage['options-autoexpand']
+  };
+});
+
 (function() {
 
   if (! $("body").hasClass("loggedin")) {

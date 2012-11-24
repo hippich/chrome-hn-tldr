@@ -1,0 +1,15 @@
+h1 {
+  font-weight: normal;
+}
+
+.tldr-options {
+  width: 250px;
+}
+
+ul.options,
+ul.options li {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  list-style-image: none;
+}

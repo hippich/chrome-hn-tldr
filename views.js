@@ -62,6 +62,8 @@ PostView = Backbone.View.extend({
     var el = this.$el;
 
     el.find("p.tagline").after("<div class='usertext-body'><div class='md top-tldr' /></div>");
+    el.find("p.title .domain").before(" <span class='top-tldr-switch'><a href='#'></a></span> ");
+
     var url_title = $("a.title", el).text();
     var url_href = $("a.title", el).attr('href');
     var url_id = el.attr("data-fullname");
@@ -97,13 +99,50 @@ PostView = Backbone.View.extend({
   },
 
   render: function() {
-    this.$el.find('.top-tldr').html( 
-      markdown.toHTML(this.model.get('sorted_tldrs')[0].title)
-    );
+    var top_tldr = this.model.get('sorted_tldrs')[0].title;
+    var id = this.model.get('id');
+
+    if (top_tldr) {
+
+      var hide = false;
+      if (storage['switch-' + id] == 'hide' || (! storage['switch-' + id] && ext_options.autoexpand == 'no')) {
+        hide = true;
+      }
+
+      if (hide) {
+        this.$el.find('.top-tldr').hide();
+        this.$el.find('.top-tldr-switch a').text("+ show tl;dr");
+      }
+      else {
+        this.$el.find('.top-tldr').show();
+        this.$el.find('.top-tldr-switch a').text("- hide tl;dr");
+      }
+
+      this.$el.find('.top-tldr').html( 
+        markdown.toHTML(top_tldr)
+      );
+    }
   },
 
   events: {
-    //'click .it-is-tldr': 'do_tldr'
+    'click .top-tldr-switch a': 'switch_top_tldr'
+  },
+
+  switch_top_tldr: function(e) {
+    e.preventDefault();
+
+    if ($(".top-tldr", this.$el).is(":visible")) {
+      // Hide it
+      $(".top-tldr", this.$el).slideUp();
+      $('.top-tldr-switch a', this.$el).text("+ show tl;dr");
+      chrome.extension.sendRequest({method: "saveSwitch", id: this.model.id, status: 'hide'});
+    }
+    else {
+      // Show it
+      $(".top-tldr", this.$el).slideDown();
+      $('.top-tldr-switch a', this.$el).text("- hide tl;dr");
+      chrome.extension.sendRequest({method: "saveSwitch", id: this.model.id, status: 'show'});
+    }
   }
 
 });
