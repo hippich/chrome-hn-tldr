@@ -74,6 +74,11 @@ PostView = Backbone.View.extend({
       url_title: url_title
     });
 
+
+    // Hook model change events
+    _.bindAll(this, 'render');
+    m.bind('change', this.render);
+
     m.fetch();
 
     if (this.options.comments_el) {
@@ -92,10 +97,6 @@ PostView = Backbone.View.extend({
     }
 
     this.model = m;
-
-    // Hook model change events
-    _.bindAll(this, 'render');
-    this.model.bind('change', this.render);
   },
 
   render: function() {
