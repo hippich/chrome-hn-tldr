@@ -89,8 +89,7 @@ PostView = Backbone.View.extend({
 
 
     // Hook model change events
-    _.bindAll(this, 'render');
-    m.bind('change', this.render);
+    m.bind('change', this.render, this);
 
     m.fetch();
 
