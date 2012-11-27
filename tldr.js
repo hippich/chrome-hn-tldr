@@ -12,14 +12,14 @@
   }
 
   // We are on individual post comments page
-  if ($(".title a").length == 1) {
+  if ($(".title:has(a)").length == 1) {
 
     // We are interested only in http(s):// links for now
-    if (! $(".title a").attr('href').match(/^http/)) {
+    if (! $(".title > a:first").attr('href').match(/^http/)) {
       return;
     }
 
-    var el = $(".title a").parent();
+    var el = $(".title > a:first").parent();
     var post = new PostView({ 
       comments_el: el.parents('td').eq(0).find('table:eq(1) > tbody').eq(0),
       vote_user:   username,
@@ -29,19 +29,17 @@
   }
 
   // We are on page listing many posts without comments (top, new, etc)
-  if ($(".title a").length > 1) {
+  if ($(".title:has(a)").length > 1) {
 
-    $(".title a").each(function() {
-      // We are interested only in http(s):// links for now
-      if (! $(this).attr('href').match(/^http/)) {
-        return;
-      }
+    $(".title:has(a[href^='http'])").each(function() {
+      var el = $(this);
 
-      var el = $(this).parent();
-      var post = new PostView({ 
-        vote_user:   username,
-        el:          el 
-      });
+      try {
+        var post = new PostView({ 
+          vote_user:   username,
+          el:          el 
+        });
+      } catch (e) {}
     });
   }
 
